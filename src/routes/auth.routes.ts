@@ -5,6 +5,7 @@ import { requireAuth } from '../middleware/auth.middleware';
 const router = Router();
 
 router.post('/signup', signup);
+router.post('/register', signup);
 router.post('/login', login);
 router.get('/profile', requireAuth, getProfile);
 router.get('/transactions', requireAuth, getMyTransactions);
