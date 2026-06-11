@@ -88,7 +88,7 @@ app.get('/health', (req, res) => {
 });
 
 // Apply specific rate limiting to the submit route
-app.use('/api/quiz/submit', submissionLimiter);
+app.use(['/api/quiz/submit', '/quiz/submit'], submissionLimiter);
 
 // Sanitize double slashes in URL path to handle misconfigured clients/proxies
 app.use((req, res, next) => {
@@ -100,8 +100,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Mount API routes
-app.use('/api', apiRouter);
+// Mount API routes (supports both /api/ prefixed requests and stripped proxy rewrites)
+app.use(['/api', '/'], apiRouter);
 
 // Fallback for unhandled routes - forwards 404 AppError to the handler
 app.all(/.*/, (req, res, next) => {
