@@ -90,6 +90,16 @@ app.get('/health', (req, res) => {
 // Apply specific rate limiting to the submit route
 app.use('/api/quiz/submit', submissionLimiter);
 
+// Sanitize double slashes in URL path to handle misconfigured clients/proxies
+app.use((req, res, next) => {
+  if (req.url) {
+    const [path, query] = req.url.split('?');
+    const cleanPath = path.replace(/\/+/g, '/');
+    req.url = query ? `${cleanPath}?${query}` : cleanPath;
+  }
+  next();
+});
+
 // Mount API routes
 app.use('/api', apiRouter);
 
